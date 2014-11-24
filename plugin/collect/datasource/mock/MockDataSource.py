@@ -19,7 +19,7 @@ test = test.lower()
 test = test.translate(string.maketrans("",""), string.punctuation)
 test = test.split(" ")
 
-class DummyDataSource(object):
+class MockDataSource(object):
     def getDocuments(self): #generates random documents
         return (Document(" ".join([random.choice(test) for w in range(100)])) for x in range(100))
     def isStatic(self):
