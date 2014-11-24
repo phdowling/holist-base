@@ -1,0 +1,17 @@
+refactoring:
+	- move toward true blackboard pattern
+		- decouple the central core controller from strategies. Strategies are to be run in separate processes
+			- every strategy needs a database wrapper, dictionary (reuse)
+			- the core controller assigns document sets to all annotating strategies
+				strategies are subprocesses:
+					 pass ID? then DB retrieval is necessary
+					 is there a way to access the documents in-memory in a concurrent but thread safe way?
+			- when all strategies have processed a document, it is moved from the processing queue
+
+		- create broadcast system instead of listener registration. -> stub in place
+
+	later:
+	- improve multiprocessing performance
+		- provided by having strategies as separate nodes
+		- move away from twisted for threading within the strategies
+
