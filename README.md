@@ -8,7 +8,7 @@ You basically implement three things to build a data analysis app on top of Holi
 * Annotators: workers which processes and annotates each document with some extracted information (e.g. word counts, named entities, geographic coordinates..)
 * Applications: Uses the annotated documents and content, as well as possibly other knowledge sources to create some view or application of the data (clustering, map view, timeline, graphs, charts, etc. would fit into this)
 
-The example in `sample_plugin` implements a simple search function based on word counts, on a random data source. It contains example classes for each of the concepts listed above. It uses some default settings for where to serve content, defined in `holist/util/config.py`
+The example in `sample_plugin` implements a simple search application based on word counts, on a random data source. It contains example classes for each of the concepts listed above. It uses some default settings for where to serve content, defined in `holist/util/config.py`
 
 To run the example, you first have to start a MongoDB instance, and Celery workers. For me, this is done via 
 ```bash
