@@ -43,7 +43,7 @@ class StaticMockDataSource(IDataSource):
     def get_documents(self):  # generate random documents
         print "get_documents called"
         res = []
-        for x in range(1000):
+        for x in range(100):
             doc = Document(" ".join([random.choice(text) for _ in range(100)]))
             doc.unique_id = x
             res.append(doc)
@@ -66,8 +66,8 @@ class MockDataSource(IDataSource):
     def update_and_get_documents(self):  # generate random documents
         print "update_and_documents called"
         res = []
-        for x in range(1000):
+        for x in range(100):
             doc = Document(" ".join([random.choice(text) for _ in range(100)]))
-            doc.unique_id = x + random.randint(0, 3000)
+            doc.unique_id = x + random.randint(0, 4900)
             res.append(doc)
         return res

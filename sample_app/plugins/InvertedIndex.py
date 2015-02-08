@@ -3,6 +3,8 @@ from holist.util import config
 from holist.util.util import *
 ln = getModuleLogger(__name__)
 
+from holist.api import route
+
 from collections import defaultdict
 
 from holist.application.Correlator import Correlator
@@ -24,6 +26,7 @@ class InvertedIndex(Correlator):
                 self.index[word].append((count, document))
                 self.index[word].sort(reverse=True)
 
+    @route("/", methods=["GET"])
     def get_root(self, request):
         return """<!DOCTYPE html>
                     <html>
@@ -40,6 +43,7 @@ class InvertedIndex(Correlator):
                     </html>
                 """ % (config.app_ip, config.app_port)
 
+    @route("/find_relevant", methods=["GET"])
     def find_relevant_documents(self, request):
         query = request.args["query"][0]
         ln.debug("got query: %s", query)
@@ -53,5 +57,6 @@ class InvertedIndex(Correlator):
 
         results.sort(reverse=True)
         return json.dumps([{"id": doc.holist_unique_id, "text": doc.text, "rel": score} for score, doc in results])
+
 
 
