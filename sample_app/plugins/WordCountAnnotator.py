@@ -20,7 +20,7 @@ class WordCountAnnotator(Annotator):
         res = []
         for document in documents:
             counts = defaultdict(int)
-            for word in document.text.split():
+            for word in document.text.split(" "):
                 counts[word.lower()] += 1
             res.append(dict(counts))
         return res

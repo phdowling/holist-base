@@ -21,7 +21,7 @@ core_update_wait_time = 10  # seconds
 
 ### APPLICATION
 app_ip = "localhost"
-app_port = 8082
+app_port = 8080
 
 
 ### DATABASE
