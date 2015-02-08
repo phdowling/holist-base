@@ -6,8 +6,7 @@ logFormat = '%(asctime)s %(levelname)-8s %(name)-18s: %(message)s'
 showDebugLogs = True
 
 ### COLLECT
-collectNodeIP = "localhost"
-collectNodePort = 12137
+
 data_source_update_timeout = 30  # seconds
 memorize_all_documents = True
 
@@ -21,7 +20,8 @@ annotators_chunk_size = 1000
 core_update_wait_time = 10  # seconds
 
 ### APPLICATION
-
+app_ip = "localhost"
+app_port = 8082
 
 
 ### DATABASE

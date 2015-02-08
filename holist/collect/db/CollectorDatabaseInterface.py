@@ -17,6 +17,13 @@ class CollectorDatabaseInterface(object):
         self.new_documents = self.documentClient[LOCAL_DB_NAME].new_documents
         self.documents = self.documentClient[LOCAL_DB_NAME].documents
 
+    def get_all_document_ids(self):
+        qd = list((doc["holist_unique_id"] for doc in self.new_documents.find()))
+        old = list((doc["holist_unique_id"] for doc in self.documents.find()))
+        all_ = set(qd + old)
+        assert len(all_) == len(qd) + len(old)
+        return all_
+
     def queueDocuments(self, documents):
         for document in documents:
             bson = document.__dict__
@@ -29,10 +36,8 @@ class CollectorDatabaseInterface(object):
         return self.new_documents.find().count()
 
     def signalDocumentsHandled(self, documents):
-        ln.debug("before removal, have %s docs." , self.getQueuedDocumentCount())
         ids = [doc.holist_unique_id for doc in documents]
         self.new_documents.remove({"holist_unique_id": {"$in": ids}})
-        ln.debug("after removal, have %s docs." , self.getQueuedDocumentCount())
 
     def isDocumentKnown(self, document):
         if self.new_documents.find({"holist_unique_id": document.holist_unique_id}).count():
@@ -54,7 +59,7 @@ class CollectorDatabaseInterface(object):
         return bson_to_document(self.documents.find_one({"_id": _id}))
 
     def getDocuments(self, idlist):
-        return [bson_to_document(doc_bson) for doc_bson in self.documents.find({"_id": {"$in": idlist}})]
+        return [bson_to_document(doc_bson) for doc_bson in self.documents.find({"holist_unique_id": {"$in": idlist}})]
 
     def addDocuments(self, documents):
         for document in documents:

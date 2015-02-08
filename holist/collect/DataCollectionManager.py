@@ -30,7 +30,7 @@ class DataCollectionManager(object):
         self.connected = False
 
         if USE_WHOLE_DB:
-            self.knownDocuments = set(d.holist_unique_id for d in self.databaseInterface.getQueuedDocuments())
+            self.knownDocuments = set(self.databaseInterface.get_all_document_ids())
         else:
             self.knownDocuments = set()
 

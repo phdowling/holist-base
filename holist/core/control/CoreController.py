@@ -3,7 +3,6 @@ from threading import Thread
 from holist.core.control.AnnotatorManager import AnnotatorManager
 
 from holist.collect.db.CollectorDatabaseInterface import CollectorDatabaseInterface
-from holist.core.model.MongoDBCorpus import MongoDBCorpus
 from holist.util.util import *
 
 
@@ -33,10 +32,21 @@ class CoreController(object):
 
         self.strategyManager = AnnotatorManager(self, annotators)
 
-        self.lastUpdated = "never"
+        self.lastUpdated = 0
+        self._callbacks = dict()
 
         ln.info("Starting update loop.")
         self.start_update_loop()
+
+    def add_update_callback(self, name, callback):
+        self._callbacks[name] = callback
+
+    def invoke_callbacks(self, update_ids):
+        for callback_name, callback in self._callbacks.items():
+            try:
+                callback(update_ids)
+            except Exception:
+                ln.exception("Caught an error invoking callback (name %s, callable %s)" % (callback_name, callback))
 
     def start_update_loop(self):
         def update_loop():
@@ -54,13 +64,15 @@ class CoreController(object):
         newDocCount = self.database_interface.getQueuedDocumentCount()
         if newDocuments:
             ln.info("Running update iteration, got about %s new documents from collector.", newDocCount)
-
+            updated_documents_ids = []
             for chunk_no, document_chunk in enumerate(grouper(newDocuments, config.annotators_chunk_size)):
                 annotated_documents = self.strategyManager.run_annotators(document_chunk)
                 self.database_interface.addDocuments(annotated_documents)
                 self.database_interface.signalDocumentsHandled(annotated_documents)
                 self.lastUpdated = time.time()
                 ln.debug("%s chunks processed by core.", chunk_no + 1)
+                updated_documents_ids += [doc.holist_unique_id for doc in annotated_documents]
+            self.invoke_callbacks(updated_documents_ids)
         else:
             ln.debug("No new documents. Cancelling update iteration.")
         self.updating = False

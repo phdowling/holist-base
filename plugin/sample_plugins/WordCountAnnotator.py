@@ -15,16 +15,13 @@ import numpy as np
 class WordCountAnnotator(Annotator):
     tag = "word_counts"
 
-    def __init__(self):
-        self.model = None
-
     @remote_task
     def get_annotations(self, documents):
         res = []
         for document in documents:
             counts = defaultdict(int)
             for word in document.text.split():
-                counts[word] += 1
+                counts[word.lower()] += 1
             res.append(dict(counts))
         return res
 
