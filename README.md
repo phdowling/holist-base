@@ -1,11 +1,13 @@
 holist-base
 ===========
 
-Holist is a platform for document analysis. This repository holds the basic structure of the system featuring the main controllers, wrappers and sample data sources and strategies.
+Holist is a framework for easily building data analysis systems and web apps. It relies on Celery for delegating tasks, Klein/Twisted for asynchronicity and web hosting, and MongoDB for data storage.
 
-Plug-ins to extend this skeleton can be grouped into the following:
-- data source (collect layer) - an adapter that reads data from somewhere, extracts plain text, and returns the documents. The source may be streamed or static.
-- annotator (core layer) - a model or algorithm that processes and annotates each document with some extracted information (e.g. named entities, LSA vector, geographic coordinates..)
-- interface or visualization (link layer) - provides some view of the data by using different annotations and content, as well as possibly other knowledge sources (e.g. clustering, map view, timeline, graphs, charts..)
+You basically implement three things to build a data analysis app on top of Holist:
+ * One or more DataSources: adapters that read data from somewhere, extract plain text, and return the document objects. The source may be streamed or static.
+*  One or more Annotators: workers which processes and annotates each document with some extracted information (e.g. word counts, named entities, geographic coordinates..)
+* Applications: Uses the annotated documents and content, as well as possibly other knowledge sources to create some view or application of the data (clustering, map view, timeline, graphs, charts, etc. would fit into this)
+
+
 
 
